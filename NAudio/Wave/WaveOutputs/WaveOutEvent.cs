@@ -102,6 +102,28 @@ namespace NAudio.Wave
 
         private void PlaybackThread()
         {
+            Exception exception = null;
+            try
+            {
+                DoPlayback();
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            finally
+            {
+                playbackState = PlaybackState.Stopped;
+                // we're exiting our background thread
+                RaisePlaybackStoppedEvent(exception);
+            }
+        }
+
+        private void DoPlayback()
+        {
+            if (this.buffers == null || this.waveStream == null)
+                return;
+
             TimeSpan waitTime = TimeSpan.FromSeconds((double)this.buffers[0].BufferSize / (this.waveStream.WaveFormat.AverageBytesPerSecond * 2));
             while (playbackState != PlaybackState.Stopped)
             {
@@ -126,8 +148,6 @@ namespace NAudio.Wave
                     }
                 }
             }
-            // we're exiting our background thread
-            RaisePlaybackStoppedEvent();
         }
 
         /// <summary>
@@ -266,18 +286,18 @@ namespace NAudio.Wave
 
         #endregion
 
-        private void RaisePlaybackStoppedEvent()
+        private void RaisePlaybackStoppedEvent(Exception e)
         {
-            EventHandler handler = PlaybackStopped;
+            var handler = PlaybackStopped;
             if (handler != null)
             {
                 if (this.syncContext == null)
                 {
-                    handler(this, EventArgs.Empty);
+                    handler(this, new StoppedEventArgs(e));
                 }
                 else
                 {
-                    this.syncContext.Post(state => handler(this, EventArgs.Empty), null);
+                    this.syncContext.Post(state => handler(this, new StoppedEventArgs(e)), null);
                 }
             }
         }

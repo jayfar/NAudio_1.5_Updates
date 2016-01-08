@@ -376,6 +376,7 @@
     <Compile Include="Wave\WaveOutputs\DirectSoundOut.cs" />
     <Compile Include="Wave\WaveOutputs\IWaveProviderFloat.cs" />
     <Compile Include="Wave\WaveOutputs\PlaybackState.cs" />
+    <Compile Include="Wave\WaveOutputs\StoppedEventArgs.cs" />
     <Compile Include="Wave\WaveOutputs\WasapiOut.cs" />
     <Compile Include="Wave\WaveOutputs\WaveBuffer.cs" />
     <Compile Include="Wave\MmeInterop\WaveCallbackInfo.cs" />
