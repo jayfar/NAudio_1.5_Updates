@@ -1,0 +1,8 @@
+bin/
+obj/
+.svn/
+SVNClient/
+*.opensdf
+*.sdf
+*.suo
+*.user
